@@ -1,0 +1,15 @@
+.DS_Store
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+web/jury/node_modules/
+web/jury/dist/
+web/jury/.env
+
+backend/supabase/.temp/
+backend/supabase/.branches/
+backend/supabase/.env
+
+permissions.json
+sensitive.txt

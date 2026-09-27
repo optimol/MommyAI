@@ -1,0 +1,22 @@
+project_id = "mommy-ai"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
+
+[studio]
+enabled = true
+port = 54323
+
+[functions.verify-evidence]
+verify_jwt = true
+
+[functions.ai-jury]
+verify_jwt = true
