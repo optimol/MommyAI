@@ -127,7 +127,7 @@ struct SupabaseService {
                     persona: "Passive-Aggressive Mom",
                     choice: consequences.last(where: { $0.type == .embarrass })?.id.uuidString
                         ?? consequences[0].id.uuidString,
-                    comment: "Send Dad the approved spicy pic. I’m sure he’ll be thrilled you found time for that."
+                    comment: "Send Bio Mom the approved spicy pic. I’m sure she’ll be thrilled you found time for that."
                 )
             ]
         }

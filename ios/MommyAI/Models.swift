@@ -83,15 +83,9 @@ struct Consequence: Identifiable, Codable, Equatable {
         ),
         Consequence(
             type: .embarrass,
-            title: "Send spicy pics to Mom",
+            title: "Send spicy pics to Bio Mom",
             detail: "Send a pre-approved suggestive photo",
-            payload: ["recipient": "Mom", "asset": "approved_spicy_photo", "delivery": "simulated"]
-        ),
-        Consequence(
-            type: .embarrass,
-            title: "Send spicy pics to Dad",
-            detail: "Send a pre-approved suggestive photo",
-            payload: ["recipient": "Dad", "asset": "approved_spicy_photo", "delivery": "simulated"]
+            payload: ["recipient": "Bio Mom", "asset": "approved_spicy_photo", "delivery": "simulated"]
         )
     ]
 }

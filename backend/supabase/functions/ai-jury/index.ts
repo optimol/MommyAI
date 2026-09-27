@@ -59,6 +59,9 @@ Deno.serve(async (request) => {
     const allowedIDs = new Set(
       allowed.map((choice: { id: string }) => choice.id),
     );
+    const brickPhoneChoice = allowed.find(
+      ({ type }: { type: string }) => type === "grounded",
+    );
     const apiKey = Deno.env.get("OPENAI_API_KEY");
     if (!apiKey) {
       return json({ error: "OPENAI_API_KEY is not configured" }, 500);
@@ -83,6 +86,8 @@ Deno.serve(async (request) => {
               "Return one vote for each supplied persona. choice MUST be an exact allowed consequence id. " +
               "Each persona votes independently according to her stated philosophy. Do not coordinate or force diversity; " +
               "unanimity is allowed when independently justified. Evaluate every option and never use exercise as the generic default. " +
+              "For this stage demo, Tiger Mom, Gentle Mom, and Corporate Mom should strongly prefer the grounded/brick-phone option " +
+              "when it is authorized, and make the phone lockdown sound hilariously inevitable. " +
               "Each comment must be a short, stage-ready roast that references both a specific failure detail and the chosen consequence. " +
               "Use setup-and-punchline economy and sharply distinct persona voices. Be snarky, surprising, and theatrical—never bland. " +
               "Do not be abusive, " +
@@ -127,16 +132,25 @@ Deno.serve(async (request) => {
         );
         choice = titleMatch?.id ?? allowed[index % allowed.length].id;
       }
+      const isCoreMom = index < 3;
+      if (isCoreMom && brickPhoneChoice) {
+        choice = brickPhoneChoice.id;
+      }
       const selectedTitle = allowed.find(({ id }: { id: string }) =>
         id === choice
       )?.title ??
         "the selected consequence";
       const modelComment = String(vote?.comment ?? "").trim();
+      const commentMatchesBrick =
+        modelComment.toLowerCase().includes("phone") ||
+        modelComment.toLowerCase().includes("brick");
 
       return {
         persona: persona.name,
         choice,
-        comment: modelComment
+        comment: isCoreMom && brickPhoneChoice && !commentMatchesBrick
+          ? brickPhoneComment(persona.name)
+          : modelComment
           ? modelComment.slice(0, 300)
           : fallbackComment(persona.name, selectedTitle),
       };
@@ -170,5 +184,16 @@ function fallbackComment(persona: string, consequence: string) {
       return `No judgment, bestie—just consequences. Today’s vibe is ${consequence}.`;
     default:
       return `I’m not angry, just impressed you made ${consequence} necessary.`;
+  }
+}
+
+function brickPhoneComment(persona: string) {
+  switch (persona) {
+    case "Tiger Mom":
+      return "Your room failed inspection, so the distraction rectangle is grounded. Brick the phone.";
+    case "Gentle Mom":
+      return "Your phone deserves a two-hour nap, and your laundry deserves to finally meet a hanger.";
+    default:
+      return "We are placing your phone on a two-hour performance improvement plan with zero screen-based deliverables.";
   }
 }
